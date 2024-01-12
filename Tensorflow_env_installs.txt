@@ -1,0 +1,20 @@
+tensorflow env installs:
+
+# cuda and TF
+conda install -c conda-forge cudatoolkit=11.2 cudnn=8.1.0
+# Anything above 2.10 is not supported on the GPU on Windows Native
+python -m pip install "tensorflow<2.11"
+# Verify the installation:
+python -c "import tensorflow as tf; print(tf.config.list_physical_devices('GPU'))"
+
+# other dependencies:
+python -m pip install -U matplotlib
+python -m pip install -U scikit-image
+pip install opencv-python
+pip install albumentations
+pip install jupyter notebook # not yet really used
+
+
+## just for keras.utils.plot_model, install: --> which only works in jupyter notebook
+- pip install pydot
+- and https://graphviz.gitlab.io/download/ (i used version 9.0.0)
