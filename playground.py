@@ -1,4 +1,6 @@
 import math
+from glob import glob
+from time import sleep
 
 import cv2
 import keras
@@ -9,9 +11,67 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 from src.efficientUNet.model.efficient_unet import build_efficient_unet
-from src.efficientUNet.model.predict import predict
+from src.efficientUNet.model.predict import predict_single_image, predict
 from src.efficientUNet.utils.data_generation import create_tiles
 from src.efficientUNet.utils.visualize import show_3images
+
+
+print('best' in 'fdafda_fobest-.h5')
+
+list_of_list = [[] for x in range(5)]
+print('list of list:', list_of_list)
+
+thresholds = [x/10 for x in range(0, 11)]
+print(thresholds)
+
+resoltuions = {i: None for i in range(1, 4)}
+print(resoltuions)
+end
+
+
+print('find np array type:')
+img_path = 'G:/20231006_Martin/images/Slide2-25_ChannelBrightfield_Seq0003_XY1-1.tif'
+img = imread(img_path)
+print('list?', isinstance(img, list))
+print('type=', type(img), '\n\n')
+
+print('img')
+predict(img, 'fdsafda')
+print('list[img]')
+predict([img], 'fdsaf')
+print('img_path')
+predict(img_path, 'fdsa')
+end
+
+
+print('Continue in ', end='')
+for i in range(3, 0, -1):
+    print(i, end='...')
+    sleep(1)
+print('0')
+end
+
+test_mask_dir = None
+print('not None=', not test_mask_dir)
+test_mask_dir = 'fdsa'
+print('not (str)=', not test_mask_dir)
+print('not not (str)=', not not test_mask_dir)
+end
+
+print('test zip and enumerate')
+dir_img_unsplit = "G:/20231006_Martin/Plaque-Size-Samples_annotations_photoshop/all_images"
+dir_mask_unsplit = "G:/20231006_Martin/Plaque-Size-Samples_annotations_photoshop/all_masks"
+imgs_ = glob(dir_img_unsplit + '/*.tif')
+masks_ = glob(dir_mask_unsplit + '/*.tif')
+for i, (img, mask) in enumerate(zip(imgs_, masks_)):
+    print(i, img, mask)
+    if i == 2:
+        break
+end
+
+
+
+
 
 print('checking image padding')
 shape_y = 4875
@@ -49,7 +109,7 @@ model = keras.models.load_model(model_path)
 print("in playground")
 img_path = 'G:/20231006_Martin/images/Slide2-25_ChannelBrightfield_Seq0003_XY1-1.tif'
 img = imread(img_path)
-predict(img, model, factor=1, batch_size=0)
+predict_single_image(img, model, factor=1, batch_size=0)
 print("playground end")
 
 '''

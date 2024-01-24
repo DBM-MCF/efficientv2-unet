@@ -40,17 +40,38 @@ class DataSetGenerator(Sequence):
      unet-with-efficientnet-encoder-in-keras
     """
     def __init__(self,
-                 train_im_path=None,
-                 train_mask_path=None,
+                 train_im_path: str = None,
+                 train_mask_path: str = None,
                  augmentations: bool = False,
-                 batch_size=16,
-                 img_size=256,
-                 n_channels=3,
-                 file_ext='.tif',
-                 shuffle=True,
+                 batch_size: int = 16,
+                 img_size: int = 256,
+                 n_channels: int = 3,
+                 file_ext: str = '.tif',
+                 shuffle: bool = True,
                  resolution: int = 1  # 1= full, 2= half, ect.
                  ):
-        """"""
+        """
+        Creates a train or validation dataset for model training.
+        Takes the input images and tiles them into 'crops' of (img_size,
+        img_size) size. To fit the full input images it will reflect the right,
+        and bottom boarders (making it fit to a multiple of img_size).
+        The tiles are then saved to corresponding sub-folders in the input
+        paths.
+        Augmentations are applied on the fly during training, and is suggested
+        for train datasets.
+        resolution > 1 will downscale the input images by that factor, before
+        cropping. However, dataset generation includes tile creation for
+        two subsequent downscaling (i.e. half XY and third XY).
+        :param train_im_path: (str) raw 3 channel image folder path
+        :param train_mask_path: (str) ground truth image folder path
+        :param augmentations: (bool) do image augmentation
+        :param batch_size: (int) number of images in batch
+        :param img_size: (int) YX image pixel size for training (crop size)
+        :param n_channels: (int) number of channels of raw images
+        :param file_ext: (str) file extension of image files (e.g. '.tif')
+        :param shuffle: (bool) shuffle images
+        :param resolution: (int) whether to downscale images by this factor
+        """
         # setting the random seed, for shuffling images
         np.random.seed(SEED)
 
@@ -132,7 +153,7 @@ class DataSetGenerator(Sequence):
             assert height == mask.shape[0]
             assert width == mask.shape[1]
             assert img.shape[2] == 3, 'Raw image must have 3 channels'
-            assert len(mask.shape) == 2, 'No channels in mask image allowed, ' \
+            assert len(mask.shape) == 2, 'No channels in mask image allowed, '\
                                          f'problematic image: {path}'
 
             # resize image to resolution requested
@@ -175,7 +196,7 @@ class DataSetGenerator(Sequence):
             if count in self.metadata.keys():
                 # if image already in metadata, add new resolution key
                 img_metadata = self.metadata[count]
-                img_metadata.update({f'Resolution@1/{self.resolution}': {
+                img_metadata.update({f'resolution@1/{self.resolution}': {
                     'resized_image_shape': (
                         img.shape[0], img.shape[1], img.shape[2]
                     ),
@@ -191,7 +212,7 @@ class DataSetGenerator(Sequence):
                     )),
                     'mask_path': os.path.abspath(path),
                     'original_image_shape': (height, width, img.shape[2]),
-                    f'Resolution@1/{self.resolution}': {
+                    f'resolution@1/{self.resolution}': {
                         'resized_image_shape': (
                             img.shape[0], img.shape[1], img.shape[2]
                         ),
@@ -227,7 +248,7 @@ class DataSetGenerator(Sequence):
                     crop_count += 1
 
                     # add crop info to this image's metadata
-                    d = self.metadata[count][f'Resolution@1/{self.resolution}']
+                    d = self.metadata[count][f'resolution@1/{self.resolution}']
                     d['number_of_img_crop'] += 1
                     d[file_name.replace('.tif', '')] = {
                         'crop_image_path': os.path.abspath(file_path.replace(
@@ -297,7 +318,7 @@ class DataSetGenerator(Sequence):
                 RandomBrightnessContrast(),
             ], p=0.5),
             OneOf([
-                # I dont like those transformations, but maybe they do help
+                # I don't like those transformations, but maybe they do help
                 ElasticTransform(alpha=120, sigma=120 * 0.05,
                                  alpha_affine=120 * 0.03),
                 GridDistortion(),
@@ -341,44 +362,65 @@ class DataSetGenerator(Sequence):
         return np.uint8(x), np.uint8(y)
 
 
-def split_folder_files_to_train_val(
+def split_folder_files_to_train_val_test(
     image_dir: str,
     mask_dir: str,
-    split: float = 0.2,
-    file_ext: str = '.tif'
+    do_val: bool,
+    do_test: bool,
+    split_val: float = 0.15,
+    split_test: float = 0.15,
+    file_ext: str = '.tif',
 ):
     """
-    Check if files in image_dir match the mask names.
+    Checks if files in image_dir match the mask names.
     Create new sub-folders in the image_dir and mask_dir, for
-    randomly selected train and validation images.
+    randomly selected train, validation and test images.
+    Optionally, the function splits the images into only train & validation,
+    or train & test images.
     This function will move (not copy) the images.
 
     :param image_dir: (str) path to raw image directory
     :param mask_dir: (str) path to mask image directory
-    :param split: (float) percent for validation data split
-    :param file_ext: (str) optional image file extension
-    :return: tuple(str) of the paths: train_img, train_mask, val_img, val_mask
+    :param do_val: (bool) whether to split into validation, if False it sets
+                    the split_val to 0.
+    :param do_test (bool) whether to split into test, if False it sets the
+                    split_test to 0.
+    :param split_val: (float) percent for validation data split
+                    default = 0.15, i.e. 15% validation images.
+    :param split_test: (float) percent for test data split
+                    default = 0.15, i.e. 15% test images.
+    :param file_ext: (str) optional image file extension (default = '.tif')
+    :return: tuple(str) of the paths:
+            train_img, train_mask, val_img, val_mask, test_img, test_mask
+
+    :raises RuntimeError if the sum of split_val + split_test > 0.8
+    :raises RuntimeError if val or test images requested, but gave 0 images.
     """
-    # check if the final folders already exist
+    # define output folder paths
     train_img = os.path.join(image_dir, 'train')
     train_mask = os.path.join(mask_dir, 'train')
     val_img = os.path.join(image_dir, 'val')
     val_mask = os.path.join(mask_dir, 'val')
-    for folder in [train_img, train_mask, val_img, val_mask]:
+    test_img = os.path.join(image_dir, 'test')
+    test_mask = os.path.join(mask_dir, 'test')
+    # sanity checks         --------------------------------------------------
+    folders = [train_img, train_mask]
+    if split_val > 0:
+        folders.append(val_img)
+        folders.append(val_mask)
+    if split_test > 0:
+        folders.append(test_img)
+        folders.append(test_mask)
+    for folder in folders:
         if os.path.exists(folder):
             raise FileExistsError(f'The folder <{folder}> already exists. '
                                   f'Looks like the training data has '
                                   f'already been split...')
-    # create those folders
-    for folder in [train_img, train_mask, val_img, val_mask]:
-        os.makedirs(folder)
-        print('Created folder:', folder)
 
     # check that the files exist
     img_paths = glob.glob(image_dir + "/*" + file_ext)
-    # sanity check
     if len(img_paths) == 0:
-        raise RuntimeError(f'No <{file_ext}> files found in {image_dir}.')
+        raise RuntimeError(f'No <{file_ext}> files found in <{image_dir}>.')
     missing_masks = []
     for p in img_paths:
         mask_path = p.replace(image_dir, mask_dir)
@@ -390,13 +432,62 @@ def split_folder_files_to_train_val(
         raise FileNotFoundError(f'Could not find {len(missing_masks)} '
                                 f'masks. See above.')
 
-    # randomise and split into train and validation images
+    if not do_val:
+        split_val = 0
+    if not do_test:
+        split_test = 0
+
+    if split_val + split_test > 0.8:
+        raise RuntimeError(
+            f'The chosen percentages of validation images ('
+            f'{round(100 * split_val)}%) and test images ('
+            f'{round(100 * split_test)}%), do not leave much for training '
+            f'data. The suggestion is 15% for validation and test each.'
+        )
+
+    # randomise and split into train, validation and test images    ----------
     np.random.seed(SEED)
     img_paths = np.asarray(img_paths)
     np.random.shuffle(np.asarray(img_paths))
-    val_paths = img_paths[:int(len(img_paths)*split)]
-    train_paths = img_paths[int(len(img_paths)*split):]
+    n_img = len(img_paths)
 
+    val_paths = img_paths[:round(n_img * split_val)]
+    test_paths = img_paths[
+                 round(n_img * split_val):round(n_img*(split_val + split_test))
+                 ]
+    train_paths = img_paths[round(n_img * (split_val + split_test)):]
+
+    # sanity check (do not allow splitting and getting 0 images from the split)
+    if split_val > 0 and len(val_paths) == 0:
+        raise RuntimeError(
+            f'Splitting the {n_img} images into {100 * split_val}% '
+            f'validation images, gave 0 validation images. You need at least'
+            f' one, so choose a higher validation split value.'
+        )
+    if split_test > 0 and len(test_paths) == 0:
+        raise RuntimeError(
+            f'Splitting the {n_img} images into {100 * split_test}% '
+            f'test images, gave 0 test images. You need at least one, '
+            f'so choose a higher test split value.'
+        )
+
+    # create the folders      ------------------------------------------------
+    os.makedirs(train_img)
+    print('Created folder:', train_img)
+    os.makedirs(train_mask)
+    print('Created folder:', train_mask)
+    if split_val > 0:
+        os.makedirs(val_img)
+        print('Created folder:', val_img)
+        os.makedirs(val_mask)
+        print('Created folder:', val_mask)
+    if split_test > 0:
+        os.makedirs(test_img)
+        print('Created folder:', test_img)
+        os.makedirs(test_mask)
+        print('Created folder:', test_mask)
+
+    # move images to corresponding folders              ----------------------
     # move train images
     for path in train_paths:
         file_name = os.path.basename(path)
@@ -414,13 +505,39 @@ def split_folder_files_to_train_val(
         mask_path = path.replace(image_dir, mask_dir)
         new_mask_path = os.path.join(val_mask, file_name)
 
-        # move the train images
+        # move the validation images
+        shutil.move(path, new_img_path)
+        shutil.move(mask_path, new_mask_path)
+    # move test images
+    for path in test_paths:
+        file_name = os.path.basename(path)
+        new_img_path = os.path.join(test_img, file_name)
+        mask_path = path.replace(image_dir, mask_dir)
+        new_mask_path = os.path.join(test_mask, file_name)
+
+        # move the test images
         shutil.move(path, new_img_path)
         shutil.move(mask_path, new_mask_path)
 
-    print(f'Split {len(img_paths)} images into {len(train_paths)} train '
-          f'images and {len(val_paths)} validation images.')
-    return train_img, train_mask, val_img, val_mask
+    # print splitting results           --------------------------------------
+    if split_val > 0:
+        if split_test > 0:
+            print(
+                f'Split {n_img} images into {len(train_paths)} train, '
+                f'{len(val_paths)} validation and {len(test_paths)} '
+                f'test images.'
+            )
+        else:
+            print(
+                f'Split {n_img} images into {len(train_paths)} train and '
+                f'{len(val_paths)} validation images.'
+            )
+    else:
+        print(
+            f'Split {n_img} images into {len(train_paths)} train and '
+            f'{len(test_paths)} test images.'
+        )
+    return train_img, train_mask, val_img, val_mask, test_img, test_mask
 
 
 def create_tiles(img, tile_size: int):
@@ -444,6 +561,17 @@ def create_tiles(img, tile_size: int):
 
 # For testing
 if __name__ == '__main__':
+    img_dir = "G:/20231006_Martin/Plaque-Size-Samples_annotations_photoshop/all_images"
+    gt_dir = "G:/20231006_Martin/Plaque-Size-Samples_annotations_photoshop/all_masks"
+    split_folder_files_to_train_val_test(
+        image_dir=img_dir,
+        mask_dir=gt_dir,
+        do_val=True,
+        do_test=True,
+        split_val=0.7,
+        split_test=0.1,
+    )
+
     """
     # test DGenInMem
     img_dir = "G:/20231006_Martin/Plaque-Size-Samples_annotations_photoshop/train/images"

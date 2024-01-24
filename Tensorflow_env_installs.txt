@@ -14,6 +14,9 @@ pip install opencv-python
 pip install albumentations
 pip install jupyter notebook # not yet really used
 
+# new 20240123
+pip install pandas # v.2.2.0
+
 
 ## just for keras.utils.plot_model, install: --> which only works in jupyter notebook
 - pip install pydot

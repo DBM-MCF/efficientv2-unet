@@ -1,34 +1,111 @@
 from math import ceil
 from typing import Union
 
+import keras
+import numpy
 import numpy as np
 import cv2
 
-from keras import Model
+
 from tifffile import imread
 
 from src.efficientUNet.utils.visualize import show_3images, show_all_images
 
 
-def predict(img,
-            model: Union[Model, str],
+def predict(images: Union[list, numpy.ndarray],
+            model: Union[keras.Model, str],
             factor: int = 1,
             tile_size: int = 512,
             overlap: int = 0,
             batch_size: int = 1
             ):
     """
-    Predict an image with tiling.
-    The input image will be tiled (shape = (tile_size, tile_size)), with
-    overlaps. The prediction is performed on the tiles.
+    Predict a list of images with tiling.
+    The input images will be tiled (shape = (tile_size, tile_size)), with
+    overlaps. The prediction is performed on the tiles, one image after
+    the other.
     Eventually, the predicted tiles are fused back together into the final
-    output image.
-    :param img: input image (3 channels)
+    output image, and resized to the full (original) resolution.
+    :param images: input image (array of 3 channels)
     :param model: either a loaded keras model,
                   or a (str) path to the .h5 model file
     :param factor: (int) downscaling factor for input image, should be a
                    multiple of 2 (I think).
-    :param tile_size: (int) YX tile size in pixels,
+    :param tile_size: (int) YX tile size in pixels, (must be 2**x)
+                      I think the tile size should be maximized to what
+                      the GPU can take
+    :param overlap: (int) tile overlap in pixels, if 0 (default) then 15% of
+                    the tile size is chosen as overlap
+    :param batch_size: (int) number of tiles to be predicted simultaneously,
+                       (max. number depends also on the tile size).
+                       If set to 0, it defaults to 32.
+    :return: predicted image or list of predicted images
+    """
+    # sanity check
+    if isinstance(images, list):
+        # only check first item in list
+        if not isinstance(images[0], np.ndarray):
+            raise TypeError(f'The list of images does not contain numpy '
+                            f'arrays. The first item is of type: '
+                            f'{type(images[0])}')
+    elif not isinstance(images, np.ndarray):
+        raise TypeError(
+            f'The predict function only works with a numpy array or a list '
+            f'of numpy arrays. Got: {type(images)}'
+        )
+
+    # load model already, to avoid multiple reloads
+    if isinstance(model, str):
+        print('Loading model...')
+        try:
+            model = keras.models.load_model(model)
+        except OSError:
+            raise IOError(
+                f'The path to the EfficientUNet-V2 model is wrong. '
+                f'Check the path (it should be an ".h5" file), yours: '
+                f'<{model}>')
+
+    # do the prediction for a single image
+    if not isinstance(images, list):
+        return predict_single_image(
+            img=images, model=model,
+            factor=factor, tile_size=tile_size,
+            overlap=overlap, batch_size=batch_size
+        )
+    else:
+        predictions = []
+        # Fixme, would be nice to use tqdm, but im too lazy to install it
+        # i.e.:     for i in tqdm(images):
+        for i in images:
+            predictions.append(
+                predict_single_image(
+                    img=i, model=model,
+                    factor=factor, tile_size=tile_size,
+                    overlap=overlap, batch_size=batch_size
+                )
+            )
+        return predictions
+
+
+def predict_single_image(img,
+                         model: Union[keras.Model, str],
+                         factor: int = 1,
+                         tile_size: int = 512,
+                         overlap: int = 0,
+                         batch_size: int = 1
+                         ):
+    """
+    Predict an image with tiling.
+    The input image will be tiled (shape = (tile_size, tile_size)), with
+    overlaps. The prediction is performed on the tiles.
+    Eventually, the predicted tiles are fused back together into the final
+    output image, and resized to the full (original) resolution.
+    :param img: input image (array of 3 channels)
+    :param model: either a loaded keras model,
+                  or a (str) path to the .h5 model file
+    :param factor: (int) downscaling factor for input image, should be a
+                   multiple of 2 (I think).
+    :param tile_size: (int) YX tile size in pixels, (must be 2**x)
                       I think the tile size should be maximized to what
                       the GPU can take
     :param overlap: (int) tile overlap in pixels, if 0 (default) then 15% of
@@ -42,8 +119,8 @@ def predict(img,
     # fixme tile size must be a multiple of /256/ -> must be 2**X
     if overlap == 0:
         overlap = int(tile_size * 0.15)
-        print(f'-- Info: tile size is <{tile_size}x{tile_size}> and has an '
-              f'overlap of {overlap}px.')
+        # print(f'-- Info: tile size is <{tile_size}x{tile_size}> and has an '
+        #       f'overlap of {overlap}px.')
     if overlap < tile_size * 0.1:
         raise RuntimeError(
             f'The tiling overlap should be more than 10% of the tile size. '
@@ -63,11 +140,9 @@ def predict(img,
     ori_size_y = img.shape[0]
     ori_size_x = img.shape[1]
 
-    print('img.shape before downscaling', img.shape)
-    # Donwscaling image
+    # Downscaling image
     if factor > 1:
         img = cv2.resize(img, (ori_size_x // factor, ori_size_y // factor))
-        print('img.shape after downscaling', img.shape)
     size_y = img.shape[0]
     size_x = img.shape[1]
 
@@ -104,7 +179,6 @@ def predict(img,
     if isinstance(model, str):
         print('Loading model...')
         try:
-            import keras
             model = keras.models.load_model(model)
         except OSError:
             raise IOError(
@@ -377,6 +451,6 @@ if __name__ == '__main__':
 
 
     # model = model = keras.models.load_model(model_path)
-    img_predicted = predict(img=img_real, model=model_path, tile_size=512, overlap=0, batch_size=0, factor=4)
+    img_predicted = predict_single_image(img=img_real, model=model_path, tile_size=512, overlap=0, batch_size=0, factor=4)
     # _show_temp([img_in, img_predicted])
     show_3images(img_real, img_predicted, axes_on=True, thresh=0.5)

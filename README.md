@@ -1,6 +1,15 @@
 
 ## NOTES:
 
+### Data preparation:
+The raw images and corresponding masks, should be in separate folderes,
+and the file names must be the same.
+
+Running the predict function, will split the images into train, validation, 
+and test sets (default is 70%, 15%, 15%, respectively). Eventually, 
+the input images will be tiled (with no overlap) for training purposes (except 
+the test images).
+
 ### DataGeneration for training:
 There is a resolution parameter for the data generator,
 usually at 1. But it will generate in addition crops for training
