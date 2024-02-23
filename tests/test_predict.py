@@ -1,10 +1,8 @@
-import matplotlib.pyplot as plt
 import numpy as np
-from src.efficient_v2_unet.model.predict import (
+from efficient_v2_unet.model.predict import (
     tile_with_overlap, blend_tiles
 )
 import pytest
-from src.efficient_v2_unet.utils.visualize import show_all_images
 
 
 def random_rgb_image(size: tuple):

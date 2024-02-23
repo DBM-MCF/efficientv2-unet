@@ -452,7 +452,7 @@ def create_gradient(width, height, is_horizontal=True, start=1, stop=0):
 # ------ testing -----
 if __name__ == '__main__':
     # predict(np.random.random((500, 500)))
-    model_path = 'G:/20231006_Martin/EfficientUNet/models/my_efficientUNet-B3_allIMGs/my_efficientUNet-B3_allIMGs_best-ckp.h5'
+    model_path = '/models/my_efficientUNet-B3_allIMGs/my_efficientUNet-B3_allIMGs_best-ckp.h5'
     img_real = 'G:/20231006_Martin/images/Slide2-26_ChannelBrightfield_Seq0007_XY1.ome.tif'
     img_real = imread(img_real)
 

@@ -4,8 +4,6 @@ import os
 from time import sleep
 from typing import Union
 
-import cv2
-import numpy as np
 from skimage.io import imread, imsave
 
 import keras.models
@@ -24,10 +22,10 @@ from keras.losses import BinaryCrossentropy
 from keras.metrics import BinaryAccuracy, BinaryIoU
 from keras.optimizers import Adam
 
-from src.efficient_v2_unet.model.metrics import (
+from efficient_v2_unet.model.metrics import (
     calc_metrics, calc_metrics_average, create_metrics_graph)
-from src.efficient_v2_unet.model.predict import predict
-from src.efficient_v2_unet.utils.data_generation import (
+from efficient_v2_unet.model.predict import predict
+from efficient_v2_unet.utils.data_generation import (
     DataSetGenerator, split_folder_files_to_train_val_test
 )
 
@@ -740,7 +738,7 @@ if __name__ == "__main__":
     all_test_mask_split = "G:/20231006_Martin/Plaque-Size-Samples_annotations_photoshop/all_masks/test"
     model_type = 'b0'
     final_name = 'test_history_model.h5'
-    base_dir = '../../../models_test/'
+    base_dir = '../../models_test/'
 
     do_train = True
 

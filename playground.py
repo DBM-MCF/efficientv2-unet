@@ -4,17 +4,9 @@ from time import sleep
 
 import cv2
 import keras
-from keras import Model
 from skimage.io import imread
-from skimage.util import montage
-import numpy as np
-import matplotlib.pyplot as plt
 
-from src.efficient_v2_unet.model.efficient_v2_unet import build_efficient_v2_unet
-from src.efficient_v2_unet.model.predict import predict_single_image, predict
-from src.efficient_v2_unet.utils.data_generation import create_tiles
-from src.efficient_v2_unet.utils.visualize import show_3images
-
+from efficient_v2_unet.model.predict import predict_single_image, predict
 
 print('best' in 'fdafda_fobest-.h5')
 

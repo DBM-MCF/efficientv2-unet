@@ -220,7 +220,7 @@ def create_metrics_graph(test_metrics: dict, save_dir_path: str) -> dict:
 
 # Testing
 if __name__ == '__main__':
-    json_path = 'G:/20231006_Martin/EfficientUNet/models_test/models/test_history_model/test_history_model.json'
+    json_path = '/models_test/models/test_history_model/test_history_model.json'
     create_metrics_graph(
         test_metrics=load_metrics(json_path),
         save_dir_path=json_path

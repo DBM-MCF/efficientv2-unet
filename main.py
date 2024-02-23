@@ -4,16 +4,11 @@ import cv2
 import keras.models
 import numpy as np
 from skimage.util import montage
-from keras.losses import BinaryCrossentropy
-from keras.metrics import BinaryAccuracy, BinaryIoU
-from keras.optimizers import Adam
 from skimage.io import imread
 
-from src.efficient_v2_unet.model.efficient_v2_unet import build_efficient_v2_unet, \
-    get_callbacks, create_and_train
-from src.efficient_v2_unet.utils.data_generation import DataSetGenerator, \
-    create_tiles
-from src.efficient_v2_unet.utils.visualize import show_3images, show_2images
+from efficient_v2_unet import create_and_train
+from efficient_v2_unet.utils.data_generation import create_tiles
+from efficient_v2_unet.utils.visualize import show_2images
 
 
 IMG_SIZE = 256

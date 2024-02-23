@@ -28,7 +28,7 @@ setup(
         "Programming Language :: Python :: 3.10",
     ],
     package_dir={"": "src"},
-    packages=find_packages(where="src"),
+    packages=find_packages(),
     python_requires=">=3.7, <4",
     install_requires=[
         "tensorflow==2.10.1",
