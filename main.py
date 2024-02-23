@@ -9,11 +9,11 @@ from keras.metrics import BinaryAccuracy, BinaryIoU
 from keras.optimizers import Adam
 from skimage.io import imread
 
-from src.efficientUNet.model.efficient_unet import build_efficient_unet, \
+from src.efficient_v2_unet.model.efficient_v2_unet import build_efficient_v2_unet, \
     get_callbacks, create_and_train
-from src.efficientUNet.utils.data_generation import DataSetGenerator, \
-    DGenInMem, create_tiles
-from src.efficientUNet.utils.visualize import show_3images, show_2images
+from src.efficient_v2_unet.utils.data_generation import DataSetGenerator, \
+    create_tiles
+from src.efficient_v2_unet.utils.visualize import show_3images, show_2images
 
 
 IMG_SIZE = 256

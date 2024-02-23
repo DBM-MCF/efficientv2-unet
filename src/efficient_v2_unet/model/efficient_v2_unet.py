@@ -24,10 +24,10 @@ from keras.losses import BinaryCrossentropy
 from keras.metrics import BinaryAccuracy, BinaryIoU
 from keras.optimizers import Adam
 
-from src.efficientUNet.model.metrics import (
+from src.efficient_v2_unet.model.metrics import (
     calc_metrics, calc_metrics_average, create_metrics_graph)
-from src.efficientUNet.model.predict import predict
-from src.efficientUNet.utils.data_generation import (
+from src.efficient_v2_unet.model.predict import predict
+from src.efficient_v2_unet.utils.data_generation import (
     DataSetGenerator, split_folder_files_to_train_val_test
 )
 
@@ -154,7 +154,7 @@ def decoder_block(inputs, skip, num_filters):
     return x
 
 
-def build_efficient_unet(efficient_model, input_shape) -> Model:
+def build_efficient_v2_unet(efficient_model, input_shape) -> Model:
     """
     Build an efficient UNet model, takes imagenet weights.
 
@@ -240,6 +240,7 @@ def get_callbacks(best_only='my_efficientUNet_model_best_ckp.h5',
             best_only,
             save_best_only=True,
             monitor=monitor,
+            mode='max',
             verbose=1
         )
     ]
@@ -267,7 +268,7 @@ def create_and_train(
     test_img_dir: str = None,
     test_mask_dir: str = None,
     efficientnet: str = 'b0',
-    epochs: int = 300,
+    epochs: int = 100,
     early_stopping: bool = False,
     batch_size: int = 64,
     img_size: int = 256,
@@ -300,7 +301,7 @@ def create_and_train(
     :param test_img_dir: (str) optional: path to folder with test masks.
     :param efficientnet: (str) base EfficientNet backbone
                          (see MODELS dict for options)
-    :param epochs: (int) number of epochs to train the model for
+    :param epochs: (int) number of epochs to train the model for (default = 100)
     :param early_stopping: (Bool) for early stopping callback during training.
     :param batch_size: (int) default is 64, should be 2**x
     :param img_size: (int) crop image size. Default is 256.
@@ -310,7 +311,7 @@ def create_and_train(
     """
     # sanity checks         --------------------------------------------------
     if name is None:
-        name = 'myEfficientUNnet_' + efficientnet
+        name = 'myEfficientUNet_' + efficientnet
     elif name.endswith('.h5'):
         name = name.replace('.h5', '')
     if train_img_dir is None or train_mask_dir is None:
@@ -462,7 +463,7 @@ def create_and_train(
 
     # create model
     print('Creating the model')
-    model = build_efficient_unet(
+    model = build_efficient_v2_unet(
         efficient_model=efficientnet,
         input_shape=(None, None, 3)
     )
@@ -540,7 +541,7 @@ def create_and_train(
         }
     # calculate the metric averages
     test_metrics = calc_metrics_average(test_metrics)
-    # create metric graphs
+    # create metric graphs and calculate the best model parameters
     best_bin_ious = create_metrics_graph(
         test_metrics=test_metrics,
         save_dir_path=path  # is the path to the model folder
@@ -609,7 +610,8 @@ def create_and_train(
     print()
     print('Saved model training metadata to:', json_path)
 
-    return model
+    # FIXME, temporarily return also test_metrics
+    return model, test_metrics
 
 
 def evaluate_model(
@@ -618,6 +620,16 @@ def evaluate_model(
     mask_dir_path: str,
     file_extension: str = '.tif'
 ):
+    # TODO / FIXME -> Describe!
+    """
+    Evaluate model on test data.
+    :param model:
+    :param img_dir_path:
+    :param mask_dir_path:
+    :param file_extension:
+    :return:
+    """
+
     # sanity checks
     if not os.path.exists(img_dir_path):
         raise IOError(f'The image folder does not exist: <{img_dir_path}>')

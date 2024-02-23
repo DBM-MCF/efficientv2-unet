@@ -1,6 +1,7 @@
 # selected files/folders to ignore
 models/
 models_test/
+test_for_model_eval/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

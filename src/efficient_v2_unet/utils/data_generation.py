@@ -17,10 +17,6 @@ from albumentations import (
     # MedianBlur, GaussNoise, CenterCrop, IAAAdditiveGaussianNoise,
 )
 
-# import matplotlib.pyplot as plt
-# from src.efficientUNet.utils.visualize import show_2images, show_all_images
-
-
 IMG_SIZE = 256
 SEED = 42
 
@@ -437,6 +433,8 @@ def split_folder_files_to_train_val_test(
     if not do_test:
         split_test = 0
 
+    # Fixme temporarily deactivated
+    '''
     if split_val + split_test > 0.8:
         raise RuntimeError(
             f'The chosen percentages of validation images ('
@@ -444,6 +442,7 @@ def split_folder_files_to_train_val_test(
             f'{round(100 * split_test)}%), do not leave much for training '
             f'data. The suggestion is 15% for validation and test each.'
         )
+    '''
 
     # randomise and split into train, validation and test images    ----------
     np.random.seed(SEED)

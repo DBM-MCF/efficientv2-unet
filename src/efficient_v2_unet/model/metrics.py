@@ -100,7 +100,7 @@ def load_metrics(path: str) -> dict:
 def calc_metrics_average(test_metrics: dict) -> dict:
     """
     Adds the averages over the images for the different metrics.
-    (void) Modifies the input directory
+    Modifies/returns the input dictionary.
     :param test_metrics: (dict) from load_metrics() function, i.e.:
             - model_name.h5
                "@resolution=1/1": {
@@ -130,6 +130,7 @@ def calc_metrics_average(test_metrics: dict) -> dict:
 
 
 def create_metrics_graph(test_metrics: dict, save_dir_path: str) -> dict:
+    # TODO describe the return dict better
     """
     Takes the test metric metadata and plots the average metrics for the
     different resolutions and models.
@@ -183,6 +184,7 @@ def create_metrics_graph(test_metrics: dict, save_dir_path: str) -> dict:
             plt.xlabel('IoU threshold')
             plt.ylabel('Metric value')
             plt.title(model + ' - ' + metric)
+            plt.axis((0.1, 0.9, 0, 1))  # set axis limits
             for res, values in resolutions.items():
                 # plot only thresholds 0.1 - 0.9
                 plt.plot(x_axis[1:], values[1:], label=res)
@@ -209,6 +211,10 @@ def create_metrics_graph(test_metrics: dict, save_dir_path: str) -> dict:
                 'best_threshold': best_threshold
             }
         }
+        # print the best metrics for model
+        print(f'--> Best parameters for {model} -> threshold = '
+              f'{best_threshold} {best_res} '
+              f'(with a value of {df.max().max()}).')
     return best_parameters
 
 

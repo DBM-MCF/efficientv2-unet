@@ -1,5 +1,40 @@
+# Installation
+
+Create a python environment (e.g. with conda), in a CLI:
+
+`conda create --name myenv python=3.7`
+
+Activate environment:
+
+`conda activate myenv`
+
+Install the cudatoolkit, cudnn (for GPU support), and tensorflow:
+```
+conda install -c conda-forge cudatoolkit=11.2 cudnn=8.1.0
+python -m pip install "tensorflow<2.11"
+```
+Verify the GPU-support:
+
+`python -c "import tensorflow as tf; print(tf.config.list_physical_devices('GPU'))"`
+
+Install this library
+- download the repository
+- open a CLI, activate your environment with tensorflow (see above)
+
+```
+cd path/to/repository
+pip install -e .
+````
 
 ## NOTES:
+<span style="color:yellow">
+- TODO: remove all "src" from import of this package... !! i.e. refactor the folder structure !!
+- TODO: remove the temp deactivation in data_generation line 436
+- TODO: remove temp return in efficient_v2_unet line 613
+- TODO: check that resolution for image scaling (e.g. in predict) is always an int and not a float
+- TODO: make a notebook, where model is loaded and images are predicted one by one (so not all images need to be loaded into memory at once)
+
+</span>
 
 ### Data preparation:
 The raw images and corresponding masks, should be in separate folderes,

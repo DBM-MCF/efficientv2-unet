@@ -6,14 +6,14 @@ import numpy
 import numpy as np
 import cv2
 
-
 from tifffile import imread
 
-from src.efficientUNet.utils.visualize import show_3images, show_all_images
+#from src.efficient_v2_unet.utils.visualize import show_3images, show_all_images
 
 
 def predict(images: Union[list, numpy.ndarray],
             model: Union[keras.Model, str],
+            threshold: float = None,
             factor: int = 1,
             tile_size: int = 512,
             overlap: int = 0,
@@ -29,6 +29,9 @@ def predict(images: Union[list, numpy.ndarray],
     :param images: input image (array of 3 channels)
     :param model: either a loaded keras model,
                   or a (str) path to the .h5 model file
+    :param threshold: (float) threshold for prediction. If None (or 0),
+                      the function will return the probability map, otherwise
+                      a binary image.
     :param factor: (int) downscaling factor for input image, should be a
                    multiple of 2 (I think).
     :param tile_size: (int) YX tile size in pixels, (must be 2**x)
@@ -67,23 +70,27 @@ def predict(images: Union[list, numpy.ndarray],
 
     # do the prediction for a single image
     if not isinstance(images, list):
-        return predict_single_image(
+        img = predict_single_image(
             img=images, model=model,
             factor=factor, tile_size=tile_size,
             overlap=overlap, batch_size=batch_size
         )
+        if threshold is None or threshold == 0:
+            return img
+        else:
+            return (img > threshold).astype(np.uint8)
     else:
         predictions = []
-        # Fixme, would be nice to use tqdm, but im too lazy to install it
-        # i.e.:     for i in tqdm(images):
         for i in images:
-            predictions.append(
-                predict_single_image(
+            img = predict_single_image(
                     img=i, model=model,
                     factor=factor, tile_size=tile_size,
                     overlap=overlap, batch_size=batch_size
-                )
             )
+            if threshold is None or threshold == 0:
+                predictions.append(img)
+            else:
+                predictions.append((img > threshold).astype(np.uint8))
         return predictions
 
 
@@ -453,4 +460,4 @@ if __name__ == '__main__':
     # model = model = keras.models.load_model(model_path)
     img_predicted = predict_single_image(img=img_real, model=model_path, tile_size=512, overlap=0, batch_size=0, factor=4)
     # _show_temp([img_in, img_predicted])
-    show_3images(img_real, img_predicted, axes_on=True, thresh=0.5)
+    #show_3images(img_real, img_predicted, axes_on=True, thresh=0.5)
