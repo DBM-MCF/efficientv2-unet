@@ -6,7 +6,7 @@ import numpy as np
 from skimage.util import montage
 from skimage.io import imread
 
-from efficient_v2_unet import create_and_train
+from efficient_v2_unet.model.efficient_v2_unet import create_and_train
 from efficient_v2_unet.utils.data_generation import create_tiles
 from efficient_v2_unet.utils.visualize import show_2images
 
@@ -109,9 +109,9 @@ if do_train:
     """
 else:
     if load_best:
-        model_path = os.path.join('models', final_name, (final_name + '_best-ckp.h5'))
+        model_path = os.path.join('../models', final_name, (final_name + '_best-ckp.h5'))
     else:
-        model_path = os.path.join('models', final_name, (final_name + '.h5'))
+        model_path = os.path.join('../models', final_name, (final_name + '.h5'))
     print('****  loading model:', os.path.basename(model_path))
     model = keras.models.load_model(model_path)
     # FYI best-checkpoint seems bad... (old version)

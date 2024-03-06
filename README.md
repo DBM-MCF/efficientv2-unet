@@ -1,46 +1,113 @@
+# Attention
+This library is under development.
+
+# EfficientV2-UNet
+This package is a U-Net implementation of the [EfficientNetV2](https://arxiv.org/abs/2104.00298), using TensorFlow.
+
+EfficientNetV2 improves speed and parameter efficiency. This implementation also uses the ImageNet weights for training new models.
+
+It is intended for segmentation of histological images (RGB) that are **not** saved in pyramidal file format (WSI).
+
+The output segmentation are foreground / background. Multi-class segmentation is not (yet) possible.
+
+It works on TIF images (and probably also PNG).
+
 # Installation
 
-Create a python environment (e.g. with conda), in a CLI:
+1. Create a python environment (e.g. with conda, requires python>=3.9), in a CLI:
 
-`conda create --name myenv python=3.7`
+    `conda create --name myenv python=3.9`
 
-Activate environment:
+2. Activate environment:
 
-`conda activate myenv`
+    `conda activate myenv`
 
-Install the cudatoolkit, cudnn (for GPU support), and tensorflow:
+3. GPU support
+
+    a. GPU support for **Windows** (example with conda):
+
+    `conda install -c conda-forge cudatoolkit=11.2 cudnn=8.1.0`
+
+    b. GPU support for **Linux** -- not tested:
+
+    `python3 -m pip install tensorflow[and-cuda]`
+
+    c. **Apple Silicon** support (requires Xcode command-line tools) -- Apple Intel not tested:
+
+    ` xcode-select --install`
+
+4. Install this library
+    - download the repository
+    - open a CLI, activate your environment with tensorflow (see above)
+    - (TensorFlow will be installed for Windows and MacOS platforms)
+    ```
+    cd path/to/repository
+    pip install -e .
+    ````
+5. Verify the GPU-support:
+
+    `python -c "import tensorflow as tf; print(tf.config.list_physical_devices('GPU'))"`
+
+    or
+
+    `python -c "import tensorflow as tf; print(tf.test.is_gpu_available()`
+
+
+# Data preparation
+Mask should have background values of 0, and foreground values of 1.
+
+At least 3 image/mask TIF pairs are required to train a model, and should be located in separate folders.
+
+Folder Structure:
 ```
-conda install -c conda-forge cudatoolkit=11.2 cudnn=8.1.0
-python -m pip install "tensorflow<2.11"
+├── images
+   ├── image1.tif
+   ├── image2.tif
+   ├── image3.tif
+   └── ...
+└── masks
+   ├── image1.tif
+   ├── image2.tif
+   ├── image3.tif
+   └── ...
 ```
-Verify the GPU-support:
+Training a model will split the data into train, validation and test images (by default 70%, 15%, 15%, respectively).
+And the images will be moved to corresponding sub-folders.
 
-`python -c "import tensorflow as tf; print(tf.config.list_physical_devices('GPU'))"`
+Training is performed not on the full images but on tiles (with no overlap), which will be saved into corresponding sub-folders.
 
-Install this library
-- download the repository
-- open a CLI, activate your environment with tensorflow (see above)
-
+# Usage
+### Command-line:
 ```
-cd path/to/repository
-pip install -e .
-````
+ev2unet --help
 
+# train example:
+ev2unet --train --images path/to/images --masks path/to/masks --basedir . --name myUNetName --basemodel b2 --epochs 50
+
+# predict example:
+ev2unet --predict --dir path/to/images --model ./models/myUnetName/myUNetName.h5 --resolution 1 --threshold 0.5
+```
+
+### Jupyter notebooks 
+Examples are also available from this [repository](notebooks/).
+### QuPath extension
+A [QuPath](https://qupath.github.io/) implementation is on the way...
+
+<!--
 ## NOTES:
 <span style="color:yellow">
-- TODO: remove all "src" from import of this package... !! i.e. refactor the folder structure !!
-- TODO: remove the temp deactivation in data_generation line 436
-- TODO: remove temp return in efficient_v2_unet line 613
+- !!DONE: remove all "src" from import of this package... !! i.e. refactor the folder structure !!
+- !!DONE: remove the temp deactivation in data_generation line 436
+- !!DONE: remove temp return in efficient_v2_unet line 613
 - TODO: check that resolution for image scaling (e.g. in predict) is always an int and not a float
 - TODO: make a notebook, where model is loaded and images are predicted one by one (so not all images need to be loaded into memory at once)
-
 </span>
 
 ### Data preparation:
-The raw images and corresponding masks, should be in separate folderes,
+The raw images and corresponding masks, should be in separate folders,
 and the file names must be the same.
 
-Running the predict function, will split the images into train, validation, 
+Training will split the images into train, validation, 
 and test sets (default is 70%, 15%, 15%, respectively). Eventually, 
 the input images will be tiled (with no overlap) for training purposes (except 
 the test images).
@@ -58,19 +125,7 @@ right boarders), to accommodate crops.
 ### Best model for Martin
 currently it is the B3-best-checkpoint.
 
-Training currently takes an input folder and splits it in **train and validation datasets**
 
 ### Prediction
 somehow prediction works better if the input image is downscaled.
-
-# TODOs
-- create also test dataset
-- find a way to **evaluate** on test data (and write results into the metadata), directly after training
-- create function to predict on multiple images (or adjust current predict function)
-- to predict function:
-  - add saving
-  - add threshold?
-  - or/and optional probability mask saving
-- once evaluation is there, test for
-  - minimal epochs
-  - minimal input images
+-->

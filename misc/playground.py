@@ -91,7 +91,7 @@ model_temp = build_efficient_unet('b0', (256, 256, 3))
 model_temp.save('models/my_efficientUNet-B0_model/empty_model.h5')
 '''
 
-model_path = './models/my_efficientUNet-B3_allIMGs/my_efficientUNet-B3_allIMGs.h5'
+model_path = '../models/my_efficientUNet-B3_allIMGs/my_efficientUNet-B3_allIMGs.h5'
 
 #model_type = 'b0' # b0 seems not too bad
 #final_name = 'my_efficientUNet-' + model_type.upper() + '_model'

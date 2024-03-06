@@ -433,8 +433,6 @@ def split_folder_files_to_train_val_test(
     if not do_test:
         split_test = 0
 
-    # Fixme temporarily deactivated
-    '''
     if split_val + split_test > 0.8:
         raise RuntimeError(
             f'The chosen percentages of validation images ('
@@ -442,7 +440,17 @@ def split_folder_files_to_train_val_test(
             f'{round(100 * split_test)}%), do not leave much for training '
             f'data. The suggestion is 15% for validation and test each.'
         )
-    '''
+
+    # adjust split percentage for small image count // TODO check this works correctly
+    if len(img_paths) < 3:
+        raise RuntimeError(f'You need at least 3 images '
+                           f'to perform the training.')
+    if len(img_paths) * split_val < 1:
+        # if more than 3 images,
+        # make sure there is at least 1 val and test image each
+        split_val = 1 / len(img_paths)
+        split_test = 1 / len(img_paths)
+        print(f'Adjusted image training split for low image count.')
 
     # randomise and split into train, validation and test images    ----------
     np.random.seed(SEED)

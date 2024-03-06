@@ -608,9 +608,6 @@ def create_and_train(
     print()
     print('Saved model training metadata to:', json_path)
 
-    # FIXME, temporarily return also test_metrics
-    return model, test_metrics
-
 
 def evaluate_model(
     model: Union[Model, str],

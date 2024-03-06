@@ -2,6 +2,8 @@
 models/
 models_test/
 test_for_model_eval/
+resources/test_files
+misc/
 
 
 # Byte-compiled / optimized / DLL files
