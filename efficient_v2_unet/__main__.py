@@ -1,5 +1,5 @@
 import glob
-import os.path
+import os
 
 from efficient_v2_unet.cli import get_arg_parser
 
@@ -105,7 +105,7 @@ def main():
             for path in img_paths:
                 img = imread(path)
                 prediction = predict(
-                    images=[img],
+                    images=img,
                     model=model,
                     threshold=args.threshold,
                     factor=args.resolution,
@@ -140,7 +140,6 @@ def main():
                     # save img without compression
                     imwrite(os.path.join(args.savedir, image_name), img)
                 else:
-                    # save image with compression
                     imwrite(os.path.join(args.savedir, image_name), img,
                             compression=ZIP_DEFLATED)
                 print(f'Saved {image_name} to: {args.savedir}')
