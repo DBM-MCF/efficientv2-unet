@@ -12,11 +12,11 @@ def main():
     """
     Run package from commandline
     """
-    args = get_arg_parser().parse_args(
-    )
+    args = get_arg_parser().parse_args()
 
     # If version was requested, print it and end
     if args.version:
+        print("Checking Tensorflow ...")
         from efficient_v2_unet.version import version_summary
         print(version_summary)
         return

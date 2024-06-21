@@ -212,7 +212,7 @@ def predict_single_image(img,
             overlap=overlap
         )
     else:
-        blended_image = pred_tiles[0]
+        blended_image = np.asarray(pred_tiles[0])
 
     # Crop back to original size    ------------------------------------------
     blended_image = blended_image[:size_y, :size_x]

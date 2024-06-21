@@ -37,7 +37,7 @@ It works on TIF images (and probably also PNG).
     ` xcode-select --install`
 
 4. Install this library
-    - download the repository
+    - clone/download the repository
     - open a CLI, activate your environment with tensorflow (see above)
     - (TensorFlow will be installed for Windows and MacOS platforms)
     ```
@@ -50,7 +50,7 @@ It works on TIF images (and probably also PNG).
 
     or
 
-    `python -c "import tensorflow as tf; print(tf.test.is_gpu_available()`
+    `python -c "import tensorflow as tf; print(tf.test.is_gpu_available())`
 
 
 # Data preparation

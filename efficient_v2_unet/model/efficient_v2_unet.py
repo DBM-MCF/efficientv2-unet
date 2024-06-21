@@ -80,14 +80,28 @@ def _get_base_encoder(short_model_name, inputs) -> Model:
             include_top=False, weights="imagenet", input_tensor=inputs
         )
 
+'''
+To check model architecture:
+import tensorflow as tf
+import keras.applications.efficientnet_v2 as ef
+from keras.layers import Input
+inputs = Input((256, 256, 3))
+m = ef.EfficientNetV2B0(include_top=False, weights='imagenet', input_tensor=inputs)
+m.summary()
+
+see also here for images of the block:
+https://towardsdatascience.com/complete-architectural-details-of-all-efficientnet-models-5fd5b736142
+'''
+
 
 ENCODER_LAYER_NAMES = {
-    'b0_s1': 'input_1',                     # Activation layer with size 256
-    'b0_s2': 'block1a_project_activation',  # Activation layer with size 128
-    'b0_s3': 'block2b_expand_activation',   # Activation layer with size 64
-    'b0_s4': 'block4a_expand_activation',   # Activation layer with size 32
+    'b0_s1': 'input_1',                     # 'Activation' layer with size 256 # FIXME or should it be the normalization?
+    'b0_s2': 'block1a_project_activation',  # 'Activation' layer with size 128
+    'b0_s3': 'block2b_expand_activation',   # 'Activation' layer with size 64 # FIXME or should it be 'block2b_add'?
+    'b0_s4': 'block4a_expand_activation',   # 'Activation' layer with size 32
     # Activation layer with size 16 ('Bottleneck')
-    'b0_b1': 'block6a_expand_activation',
+    'b0_b1': 'block6a_expand_activation',   # Fixme, is this really the bottleneck? or another skip layer?
+                                            # bottle neck ?=
     'b1_s1': 'input_1',
     'b1_s2': 'block1b_project_activation',
     'b1_s3': 'block2c_expand_activation',
@@ -132,7 +146,7 @@ def conv_block(inputs, num_filters):
     x = BatchNormalization()(x)
     x = Activation("relu")(x)
 
-    x = Conv2D(num_filters, 3, padding="same")(inputs)
+    x = Conv2D(num_filters, 3, padding="same")(x) ## had a mistake here... should be x, not 'inputs'. probably requires redoing the model plots
     x = BatchNormalization()(x)
     x = Activation("relu")(x)
     return x
@@ -204,8 +218,8 @@ def build_efficient_v2_unet(efficient_model, input_shape) -> Model:
     ).output  # 16
 
     # Decoder  # FIXME ?? I actually think these are skip-connections ??
-    d1 = decoder_block(b1, s4, 512)  # 32
-    d2 = decoder_block(d1, s3, 256)  # 64
+    d1 = decoder_block(b1, s4, 512)  # 32 --> Fixme: should it be 672 filters?
+    d2 = decoder_block(d1, s3, 256)  # 64 --> Fixme: should it be 192 filters?
     d3 = decoder_block(d2, s2, 128)  # 128
     d4 = decoder_block(d3, s1, 64)  # 256
 

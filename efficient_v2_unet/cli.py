@@ -11,7 +11,7 @@ def get_arg_parser():
         description="EfficientNetV2 UNet Command Line Parameters"
     )
 
-    parser.add_argument("--version", "-v", action="store_true",
+    parser.add_argument("-v", "--version", action="store_true",
                         help="Show version info.")
 
     # train or predict arguments
