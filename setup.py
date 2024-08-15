@@ -10,7 +10,7 @@ install_requirements = [
     "scikit-image",
     "tifffile",
     "matplotlib",
-    "albumentations",
+    "albumentations<=1.4.0", # tested 1.3.1 and 1.4.0
     "opencv-python",
     "pandas",  # not sure if this is really used...
     "notebook",
