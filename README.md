@@ -50,7 +50,7 @@ It works on TIF images (and probably also PNG).
 
     or
 
-    `python -c "import tensorflow as tf; print(tf.test.is_gpu_available())`
+    `python -c "import tensorflow as tf; print(tf.test.is_gpu_available())"`
 
 
 # Data preparation

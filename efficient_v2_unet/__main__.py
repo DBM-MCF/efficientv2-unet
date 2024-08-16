@@ -53,7 +53,7 @@ def main():
                 test_mask_dir=None,  # TODO implement
                 efficientnet=args.basemodel,
                 epochs=args.epochs,
-                batch_size=64,  # TODO implement
+                batch_size=args.train_batch_size,
                 img_size=256,
                 file_ext='.tif'
             )

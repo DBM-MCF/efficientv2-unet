@@ -39,7 +39,9 @@ def get_arg_parser():
                                        "Default is %(default)s.")
     model_train_args.add_argument("--epochs", default=10, type=int,
                                   help="Number of training epochs.")
-    # TODO, also add batch-size
+    model_train_args.add_argument("--train_batch_size", default=64, type=int,
+                                  help="Batch size (should be a power of 2). "
+                                       "Default is %(default)s.")
 
     # predict arguments
     predict_args = parser.add_argument_group("Predict Arguments")

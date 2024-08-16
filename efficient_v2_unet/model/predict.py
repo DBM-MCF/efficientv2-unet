@@ -278,6 +278,10 @@ def blend_tiles(imgs, n_y: int, n_x: int, overlap: int):
                                   f'image with {len(shape)} dimension.')
     dtype_in = imgs[0].dtype
 
+    # if there is only one tile, return it
+    if len(imgs) == 1:
+        return imgs[0]
+
     # create a gradient ramp for blending the overlapping row tile parts    --
     alpha_h = create_gradient(
         width=overlap,
