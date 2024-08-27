@@ -91,7 +91,7 @@ ev2unet --predict --dir path/to/images --model ./models/myUnetName/myUNetName.h5
 ### Jupyter notebooks 
 Examples are also available from this [repository](notebooks/).
 ### QuPath extension
-A [QuPath](https://qupath.github.io/) implementation is on the way...
+Get the [QuPath extension](https://github.com/DBM-MCF/qupath-extension-efficientv2unet)!
 
 <!--
 ## NOTES:
