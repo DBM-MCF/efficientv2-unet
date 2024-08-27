@@ -1,13 +1,13 @@
-import tensorflow as tf
 import sys
+from importlib.metadata import PackageNotFoundError, version
 from platform import python_version
 
-from importlib.metadata import PackageNotFoundError, version
+import tensorflow as tf
 
 try:
     version = version("efficient_v2_unet")
 except PackageNotFoundError:
-    version = 'unknown'
+    version = "unknown"
 
 
 version_summary = f"""
