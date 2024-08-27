@@ -1,5 +1,10 @@
-# Attention
-This library is under development.
+[![License](https://img.shields.io/pypi/l/efficient-v2-unet.svg?color=green)](https://github.com/loicsauteur/efficient-v2-unet/raw/main/LICENSE)
+[![PyPI](https://img.shields.io/pypi/v/efficient-v2-unet.svg?color=green)](https://pypi.org/project/efficient-v2-unet)
+[![Python Version](https://img.shields.io/pypi/pyversions/efficient-v2-unet.svg?color=green)](https://python.org)
+[![CI](https://github.com/loicsauteur/efficient-v2-unet/actions/workflows/ci.yml/badge.svg)](https://github.com/loicsauteur/efficient-v2-unet/actions/workflows/ci.yml)
+[![codecov](https://codecov.io/gh/loicsauteur/efficient-v2-unet/branch/main/graph/badge.svg)](https://codecov.io/gh/loicsauteur/efficient-v2-unet)
+
+A U-Net implementation of the EfficientNetV2.
 
 # EfficientV2-UNet
 This package is a U-Net implementation of the [EfficientNetV2](https://arxiv.org/abs/2104.00298), using TensorFlow.
@@ -34,16 +39,19 @@ It works on TIF images (and probably also PNG).
 
     c. **Apple Silicon** support (requires Xcode command-line tools) -- Apple Intel not tested:
 
-    ` xcode-select --install`
+    `xcode-select --install`
+
+    `conda install -c apple tensorflow-deps --force-reinstall`
 
 4. Install this library
     - clone/download the repository
     - open a CLI, activate your environment with tensorflow (see above)
-    - (TensorFlow will be installed for Windows and MacOS platforms)
-    ```
-    cd path/to/repository
-    pip install -e .
-    ````
+    - (TensorFlow will be installed for Windows and macOS platforms)
+   
+    `cd path/to/repository`
+   
+    `pip install -e .`
+     
 5. Verify the GPU-support:
 
     `python -c "import tensorflow as tf; print(tf.config.list_physical_devices('GPU'))"`

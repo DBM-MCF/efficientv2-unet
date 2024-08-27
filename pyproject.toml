@@ -34,7 +34,22 @@ classifiers = [
     "Typing :: Typed",
 ]
 # add your package dependencies here
-dependencies = []
+dependencies = [
+    "numpy>1.26",
+    "scikit-image",
+    "tifffile",
+    "albumentations<=1.4.0", # tested 1.3.1 and 1.4.0
+    "opencv-python",
+    #"pandas", # not sure if really needed
+    "notebook",
+    # Platform specific installs
+    "tensorflow-macos==2.11.0 ; platform_system == 'Darwin' and platform_machine =='arm64'",
+    "tensorflow-metal==0.7.0 ; platform_system == 'Darwin' and platform_machine =='arm64'",
+    "tensorflow==2.11.0 ; platform_system == 'Darwin' and platform_machine !='arm64'",
+    "keras==2.11.0 ; platform_system == 'Darwin'",
+    "tensorflow==2.10.1 ; platform_system != 'Darwin'",
+    "keras==2.10.0 ; platform_system != 'Darwin'",
+]
 
 # https://peps.python.org/pep-0621/#dependencies-optional-dependencies
 # "extras" (e.g. for `pip install .[test]`)
@@ -49,6 +64,7 @@ dev = [
     "pre-commit",
     "rich",  # https://github.com/Textualize/rich
     "ruff",
+    "matplotlib",
 ]
 
 [project.urls]
@@ -58,8 +74,8 @@ repository = "https://github.com/loicsauteur/efficient-v2-unet"
 # Entry points
 # https://peps.python.org/pep-0621/#entry-points
 # same as console_scripts entry point
-# [project.scripts]
-# efficient-v2-unet-cli = "efficient_v2_unet:main_cli"
+[project.scripts]
+ev2unet = "efficient_v2_unet.__main__:main"
 
 # [project.entry-points."some.group"]
 # tomatoes = "efficient_v2_unet:main_tomatoes"
@@ -89,7 +105,8 @@ select = [
     "TID",  # flake8-tidy-imports
 ]
 ignore = [
-    "D401", # First line should be in imperative mood (remove to opt in)
+    "D401", # First line should be in imperative mood (remove to opt in),
+    "D100", # Ignore Missing dockstring in public module
 ]
 
 [tool.ruff.lint.per-file-ignores]
