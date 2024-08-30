@@ -1,8 +1,8 @@
-[![License](https://img.shields.io/pypi/l/efficient-v2-unet.svg?color=green)](https://github.com/loicsauteur/efficient-v2-unet/raw/main/LICENSE)
-[![PyPI](https://img.shields.io/pypi/v/efficient-v2-unet.svg?color=green)](https://pypi.org/project/efficient-v2-unet)
-[![Python Version](https://img.shields.io/pypi/pyversions/efficient-v2-unet.svg?color=green)](https://python.org)
-[![CI](https://github.com/loicsauteur/efficient-v2-unet/actions/workflows/ci.yml/badge.svg)](https://github.com/loicsauteur/efficient-v2-unet/actions/workflows/ci.yml)
-[![codecov](https://codecov.io/gh/loicsauteur/efficient-v2-unet/branch/main/graph/badge.svg)](https://codecov.io/gh/loicsauteur/efficient-v2-unet)
+[![License](https://img.shields.io/pypi/l/efficientv2-unet.svg?color=green)](https://github.com/DBM-MCF/efficientv2-unet/blob/master/LICENSE)
+[![PyPI](https://img.shields.io/pypi/v/efficientv2-unet.svg?color=green)](https://pypi.org/project/efficientv2-unet)
+[![Python Version](https://img.shields.io/pypi/pyversions/efficientv2-unet.svg?color=green)](https://python.org)
+[![CI](https://github.com/DBM-MCF/efficientv2-unet/actions/workflows/ci.yml/badge.svg)](https://github.com/DBM-MCF/efficientv2-unet/actions/workflows/ci.yml)
+[![codecov](https://codecov.io/gh/DBM-MCF/efficientv2-unet/branch/main/graph/badge.svg)](https://codecov.io/gh/DBM-MCF/efficientv2-unet)
 
 A U-Net implementation of the EfficientNetV2.
 
@@ -28,6 +28,8 @@ It works on TIF images (and probably also PNG).
     `conda activate myenv`
 
 3. GPU support
+ 
+   *Non GPU installations not tested*
 
     a. GPU support for **Windows** (example with conda):
 
@@ -37,20 +39,18 @@ It works on TIF images (and probably also PNG).
 
     `python3 -m pip install tensorflow[and-cuda]`
 
-    c. **Apple Silicon** support (requires Xcode command-line tools) -- Apple Intel not tested:
+    c. **Apple Silicon** support (requires Xcode command-line tools):
 
     `xcode-select --install`
 
     `conda install -c apple tensorflow-deps --force-reinstall`
 
+
 4. Install this library
-    - clone/download the repository
-    - open a CLI, activate your environment with tensorflow (see above)
+    - open a CLI, activate your environment (see above))
     - (TensorFlow will be installed for Windows and macOS platforms)
-   
-    `cd path/to/repository`
-   
-    `pip install -e .`
+
+    `pip install efficientv2-unet`
      
 5. Verify the GPU-support:
 
