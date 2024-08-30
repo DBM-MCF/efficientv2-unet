@@ -4,7 +4,7 @@ import random
 import numpy as np
 import pytest
 
-from efficientv2_unet.model.predict import blend_tiles, tile_with_overlap
+from efficientv2_unet.utils.tile_utils import blend_tiles, tile_with_overlap
 
 
 def random_rgb_image(size: tuple):
@@ -89,4 +89,5 @@ def test_random_size_images():
 
 # ------ run testing functions -----
 if __name__ == "__main__":
+    print("in main of test_predict.py")
     pass

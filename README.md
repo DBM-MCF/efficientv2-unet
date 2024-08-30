@@ -19,7 +19,7 @@ It works on TIF images (and probably also PNG).
 
 # Installation
 
-1. Create a python environment (e.g. with conda, requires python>=3.9), in a CLI:
+1. Create a python environment (e.g. with conda, python=3.9 and 3.10 work), in a CLI:
 
     `conda create --name myenv python=3.9`
 
