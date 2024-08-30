@@ -29,8 +29,6 @@ classifiers = [
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
-    "Programming Language :: Python :: 3.11",
-    "Programming Language :: Python :: 3.12",
     "Typing :: Typed",
 ]
 # add your package dependencies here
@@ -75,7 +73,7 @@ repository = "https://github.com/DBM-MCF/efficientv2-unet"
 # https://peps.python.org/pep-0621/#entry-points
 # same as console_scripts entry point
 [project.scripts]
-ev2unet = "efficient_v2_unet.__main__:main"
+ev2unet = "efficientv2_unet.__main__:main"
 
 # [project.entry-points."some.group"]
 # tomatoes = "efficientv2_unet:main_tomatoes"
@@ -151,7 +149,7 @@ exclude_lines = [
 ]
 
 [tool.coverage.run]
-source = ["efficient_v2_unet"]
+source = ["efficientv2_unet"]
 
 # https://github.com/mgedmin/check-manifest#configuration
 # add files that you want check-manifest to explicitly ignore here
