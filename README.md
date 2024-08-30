@@ -106,7 +106,7 @@ Get the [QuPath extension](https://github.com/DBM-MCF/qupath-extension-efficient
 <span style="color:yellow">
 - !!DONE: remove all "src" from import of this package... !! i.e. refactor the folder structure !!
 - !!DONE: remove the temp deactivation in data_generation line 436
-- !!DONE: remove temp return in efficient_v2_unet line 613
+- !!DONE: remove temp return in efficientv2_unet line 613
 - TODO: check that resolution for image scaling (e.g. in predict) is always an int and not a float
 - TODO: make a notebook, where model is loaded and images are predicted one by one (so not all images need to be loaded into memory at once)
 </span>

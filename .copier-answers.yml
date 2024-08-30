@@ -6,7 +6,7 @@ author_name: Loïc Sauteur
 git_versioning: true
 github_username: loicsauteur
 mode: customize
-module_name: efficient_v2_unet
+module_name: efficientv2_unet
 project_license: BSD-3-Clause
 project_name: efficient-v2-unet
 project_short_description: A U-Net implementation of the EfficientNetV2.

@@ -5,13 +5,13 @@ from platform import python_version
 import tensorflow as tf
 
 try:
-    version = version("efficient_v2_unet")
+    version = version("efficientv2_unet")
 except PackageNotFoundError:
     version = "unknown"
 
 
 version_summary = f"""
-efficient_v2_unet version:  \t{version}
+efficientv2_unet version:  \t{version}
 Platform:                   \t{sys.platform}
 Python version:             \t{python_version()}
 Tensorflow version:         \t{tf.__version__}

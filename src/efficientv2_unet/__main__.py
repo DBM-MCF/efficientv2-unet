@@ -5,7 +5,7 @@ from zipfile import ZIP_DEFLATED
 from skimage.io import imread
 from tifffile import imwrite
 
-from efficient_v2_unet.cli import get_arg_parser
+from efficientv2_unet.cli import get_arg_parser
 
 
 def main():
@@ -15,7 +15,7 @@ def main():
     # If version was requested, print it and end
     if args.version:
         print("Checking Tensorflow ...")
-        from efficient_v2_unet.version import version_summary
+        from efficientv2_unet.version import version_summary
 
         print(version_summary)
         return
@@ -38,7 +38,7 @@ def main():
             return
         # TODO implement val and test paths (and batch size)
 
-        from efficient_v2_unet.model.efficient_v2_unet import create_and_train
+        from efficientv2_unet.model.efficientv2_unet import create_and_train
 
         # Start training
         try:
@@ -100,7 +100,7 @@ def main():
         else:
             import keras
 
-            from efficient_v2_unet.model.predict import predict
+            from efficientv2_unet.model.predict import predict
 
             model = keras.models.load_model(args.model)
 

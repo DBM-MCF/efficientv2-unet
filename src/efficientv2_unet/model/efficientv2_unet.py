@@ -30,13 +30,13 @@ from keras.metrics import BinaryAccuracy, BinaryIoU
 from keras.optimizers import Adam
 from skimage.io import imread, imsave
 
-from efficient_v2_unet.model.metrics import (
+from efficientv2_unet.model.metrics import (
     calc_metrics,
     calc_metrics_average,
     create_metrics_graph,
 )
-from efficient_v2_unet.model.predict import predict
-from efficient_v2_unet.utils.data_generation import (
+from efficientv2_unet.model.predict import predict
+from efficientv2_unet.utils.data_generation import (
     DataSetGenerator,
     split_folder_files_to_train_val_test,
 )

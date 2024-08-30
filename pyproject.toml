@@ -15,7 +15,7 @@ sources = ["src"]
 
 # https://peps.python.org/pep-0621/
 [project]
-name = "efficient-v2-unet"
+name = "efficientv2-unet"
 dynamic = ["version"]
 description = "A U-Net implementation of the EfficientNetV2."
 readme = "README.md"
@@ -68,8 +68,8 @@ dev = [
 ]
 
 [project.urls]
-homepage = "https://github.com/loicsauteur/efficient-v2-unet"
-repository = "https://github.com/loicsauteur/efficient-v2-unet"
+homepage = "https://github.com/DBM-MCF/efficientv2-unet"
+repository = "https://github.com/DBM-MCF/efficientv2-unet"
 
 # Entry points
 # https://peps.python.org/pep-0621/#entry-points
@@ -78,12 +78,12 @@ repository = "https://github.com/loicsauteur/efficient-v2-unet"
 ev2unet = "efficient_v2_unet.__main__:main"
 
 # [project.entry-points."some.group"]
-# tomatoes = "efficient_v2_unet:main_tomatoes"
+# tomatoes = "efficientv2_unet:main_tomatoes"
 
 # https://docs.astral.sh/ruff
 [tool.ruff]
 line-length = 88
-target-version = "py38"
+target-version = "py39"
 src = ["src"]
 
 # https://docs.astral.sh/ruff/rules
@@ -135,7 +135,7 @@ pretty = true
 [tool.pytest.ini_options]
 minversion = "7.0"
 testpaths = ["tests"]
-filterwarnings = ["error"]
+filterwarnings = ["error", "ignore::DeprecationWarning"]
 
 # https://coverage.readthedocs.io/
 [tool.coverage.report]

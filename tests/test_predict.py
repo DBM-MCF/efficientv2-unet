@@ -2,10 +2,9 @@ import math
 import random
 
 import numpy as np
-from efficient_v2_unet.model.predict import (
-    tile_with_overlap, blend_tiles
-)
 import pytest
+
+from efficientv2_unet.model.predict import blend_tiles, tile_with_overlap
 
 
 def random_rgb_image(size: tuple):
@@ -67,6 +66,7 @@ def test_random_size_images():
 
     # create random image XY, according to tile size and overlap
     for i in range(4):
+        print("Run", i + 1, "out of 4")
         tile_size = random.randint(200, 1000)
         overlap = int(tile_size / 4)
         y = random.randint(1, 10)
@@ -88,5 +88,5 @@ def test_random_size_images():
 
 
 # ------ run testing functions -----
-if __name__ == '__main__':
+if __name__ == "__main__":
     pass

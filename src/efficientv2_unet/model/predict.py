@@ -7,7 +7,7 @@ import numpy
 import numpy as np
 from tifffile import imread
 
-# from src.efficient_v2_unet.utils.visualize import show_3images, show_all_images
+# from efficientv2_unet.utils.visualize import show_3images, show_all_images
 
 
 def predict(
