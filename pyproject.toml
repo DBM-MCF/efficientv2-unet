@@ -41,9 +41,9 @@ dependencies = [
     #"pandas", # not sure if really needed
     "notebook",
     # Platform specific installs
-    "tensorflow-macos==2.11.0 ; platform_system == 'Darwin' and platform_machine =='arm64'",
-    "tensorflow-metal==0.7.0 ; platform_system == 'Darwin' and platform_machine =='arm64'",
-    "tensorflow==2.11.0 ; platform_system == 'Darwin' and platform_machine !='arm64'",
+    "tensorflow-macos==2.11.0 ; platform_system == 'Darwin' and platform_machine =='x86_64'",
+    "tensorflow-metal==0.7.0 ; platform_system == 'Darwin' and platform_machine =='x86_64'",
+    "tensorflow==2.11.0 ; platform_system == 'Darwin' and platform_machine !='x86_64'",
     "keras==2.11.0 ; platform_system == 'Darwin'",
     "tensorflow==2.10.1 ; platform_system != 'Darwin'",
     "keras==2.10.0 ; platform_system != 'Darwin'",
