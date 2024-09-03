@@ -21,11 +21,11 @@ It works on TIF images (and probably also PNG).
 
 1. Create a python environment (e.g. with conda, python=3.9 and 3.10 work), in a CLI:
 
-    `conda create --name myenv python=3.9`
+    `conda create --name ev2unet_env python=3.9`
 
 2. Activate environment:
 
-    `conda activate myenv`
+    `conda activate ev2unet_env`
 
 3. GPU support for **Windows** *(Non GPU installations not extensively tested)*
 
@@ -79,7 +79,7 @@ Training is performed not on the full images but on tiles (with no overlap), whi
 ev2unet --help
 
 # train example:
-ev2unet --train --images path/to/images --masks path/to/masks --basedir . --name myUNetName --basemodel b2 --epochs 50
+ev2unet --train --images path/to/images --masks path/to/masks --basedir . --name myUNetName --basemodel b2 --epochs 50 --train_batch_size 32
 
 # predict example:
 ev2unet --predict --dir path/to/images --model ./models/myUnetName/myUNetName.h5 --resolution 1 --threshold 0.5
@@ -88,7 +88,9 @@ ev2unet --predict --dir path/to/images --model ./models/myUnetName/myUNetName.h5
 ### Jupyter notebooks 
 Examples are also available from this [repository](notebooks/).
 ### QuPath extension
-Get the [QuPath extension](https://github.com/DBM-MCF/qupath-extension-efficientv2unet)!
+Get the [qupath-extension-efficientv2unet](https://github.com/DBM-MCF/qupath-extension-efficientv2unet)!
+
+With this QuPath extension you can easily create training data and train a model via the QuPath GUI (or script). And you can also use the GUI or a script to predict.
 
 <!--
 ## NOTES:
