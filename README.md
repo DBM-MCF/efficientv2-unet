@@ -27,38 +27,27 @@ It works on TIF images (and probably also PNG).
 
     `conda activate myenv`
 
-3. GPU support
- 
-   *Non GPU installations not tested*
+3. GPU support for **Windows** *(Non GPU installations not extensively tested)*
 
-    a. GPU support for **Windows** (example with conda):
+    a. Install the cudatoolkit and cudnn, e.g. with conda:
 
     `conda install -c conda-forge cudatoolkit=11.2 cudnn=8.1.0`
+    
+      - Windows requires a specific version of TensorFlow (i.e. v2.10.1, higher versions are not supported on Windows), which will be installed by this package. 
 
-    b. GPU support for **Linux** -- not tested:
-
-    `python3 -m pip install tensorflow[and-cuda]`
-
-    c. **Apple Silicon** support (requires Xcode command-line tools):
-
-    `xcode-select --install`
-
-    `conda install -c apple tensorflow-deps --force-reinstall`
-
+    - Linux GPU support and Apple Silicon support will be resolved by installing this library.
 
 4. Install this library
-    - open a CLI, activate your environment (see above))
-    - (TensorFlow will be installed for Windows and macOS platforms)
 
     `pip install efficientv2-unet`
      
 5. Verify the GPU-support:
 
-    `python -c "import tensorflow as tf; print(tf.config.list_physical_devices('GPU'))"`
+    `python -c "import tensorflow as tf; print(tf.config.list_physical_devices('GPU'))"` >> lists your active GPU
 
     or
 
-    `python -c "import tensorflow as tf; print(tf.test.is_gpu_available())"`
+    `python -c "import tensorflow as tf; print(tf.test.is_gpu_available())"` >> prints `true` if GPU enabled
 
 
 # Data preparation
