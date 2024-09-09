@@ -49,6 +49,10 @@ It works on TIF images (and probably also PNG).
 
     `python -c "import tensorflow as tf; print(tf.test.is_gpu_available())"` >> prints `true` if GPU enabled
 
+    or 
+
+    `ev2unet --version` >> prints the versions and whether GPU support is on.
+
 
 # Data preparation
 Mask should have background values of 0, and foreground values of 1.
@@ -102,29 +106,7 @@ With this QuPath extension you can easily create training data and train a model
 - TODO: make a notebook, where model is loaded and images are predicted one by one (so not all images need to be loaded into memory at once)
 </span>
 
-### Data preparation:
-The raw images and corresponding masks, should be in separate folders,
-and the file names must be the same.
+## Info to self:
+On Windows, I have a working env 'test', and a new one to test the installation 'ev2unet'.
 
-Training will split the images into train, validation, 
-and test sets (default is 70%, 15%, 15%, respectively). Eventually, 
-the input images will be tiled (with no overlap) for training purposes (except 
-the test images).
-
-### DataGeneration for training:
-There is a resolution parameter for the data generator,
-usually at 1. But it will generate in addition crops for training
-at resolutions +1 and +2. Hence, generally/at the moment, training
-is done at multiple resolutions.
-
-For training/validation data, crops of the images are generated. The crops
-do not have any overlap, and the image is padded (reflecting at bottom and 
-right boarders), to accommodate crops.
-
-### Best model for Martin
-currently it is the B3-best-checkpoint.
-
-
-### Prediction
-somehow prediction works better if the input image is downscaled.
 -->

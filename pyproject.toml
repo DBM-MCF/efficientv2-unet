@@ -33,15 +33,15 @@ classifiers = [
 ]
 # add your package dependencies here
 dependencies = [
-    "numpy>1.26",
-    "scikit-image",
-    "tifffile",
+    "numpy>1.26,<2.0",
+    "scikit-image==0.24.0",
+    "tifffile==2024.8.30",
     "albumentations<=1.4.0", # tested 1.3.1 and 1.4.0
-    "opencv-python",
-    "pandas",
-    "notebook",
-    "matplotlib",
-    # Platform specific install - MacOS & Linux do not really require specific tensorflow versions
+    "opencv-python==4.10.0.84",
+    "pandas==2.2",
+    "notebook==7.2.2",
+    "matplotlib==3.9.2",
+    # Platform specific install
     "tensorflow-macos==2.15.0 ; platform_system == 'Darwin' and platform_machine =='arm64'",
     "tensorflow-metal==1.1.0 ; platform_system == 'Darwin' and platform_machine =='arm64'",
     "tensorflow==2.15.0 ; platform_system == 'Darwin' and platform_machine != 'arm64'",
