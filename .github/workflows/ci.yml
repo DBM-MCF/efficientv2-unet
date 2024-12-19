@@ -105,7 +105,7 @@ jobs:
         #with:
         #  repository-url: https://test.pypi.org/legacy/  # publish to TestPyPi
 
-      - uses: softprops/action-gh-release@v1
+      - uses: softprops/action-gh-release@v2
         with:
           generate_release_notes: true
           files: './dist/*'
